@@ -1,0 +1,25 @@
+{
+  "name": "java-spring-style",
+  "description": "Code style rules for Java + Spring Boot + Thymeleaf projects: naming, Java conventions, template and i18n discipline, and test conventions.",
+  "version": "1.0.0",
+  "author": {
+    "name": "barnaclejive"
+  },
+  "license": "MIT",
+  "keywords": [
+    "java",
+    "spring-boot",
+    "thymeleaf",
+    "code-style",
+    "conventions"
+  ],
+  "skills": [
+    "./skills/naming-style",
+    "./skills/java-style",
+    "./skills/thymeleaf-style",
+    "./skills/testing-style"
+  ],
+  "commands": [
+    "./commands/style-sync.md"
+  ]
+}
