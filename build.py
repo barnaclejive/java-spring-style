@@ -49,7 +49,7 @@ SKILLS = {
         "description": (
             "Test conventions for JUnit 5 and Mockito: @ExtendWith(MockitoExtension.class) "
             "scaffolding, AssertJ assertThat and assertThatThrownBy, "
-            "methodUnderTest_scenario_expectedBehavior naming, shared fixtures, per-test builders, "
+            "methodUnderTestScenarioExpectedBehavior naming, shared fixtures, per-test builders, "
             "and body formatting. Use when writing or changing tests."
         ),
     },
