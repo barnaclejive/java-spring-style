@@ -1,19 +1,18 @@
 {
   "name": "java-spring-style",
-  "id": "java-spring-style",
   "owner": {
     "name": "barnaclejive"
   },
   "metadata": {
     "description": "Portable Java, Spring Boot, and Thymeleaf code style rules",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "plugins": [
     {
       "name": "java-spring-style",
       "source": "./",
       "description": "Code style rules for Java + Spring Boot + Thymeleaf projects: naming, Java conventions, template and i18n discipline, and test conventions.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "barnaclejive"
       },
