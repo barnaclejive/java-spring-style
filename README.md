@@ -106,6 +106,9 @@ This list is a summary for an agent that reads only this README. It does not rep
   `messages.properties`.
 - Never build a string with `+`. Use `#{key(args)}` for text, `@{...}` for URLs, and `|...|` for
   identifiers.
+- Whitespace: a blank line after every method `{`, a padded `try` / `catch`, the final `return` in
+  its own paragraph. Templates: 4-space indent, continuation attributes aligned under the first
+  attribute, blank lines only between sibling blocks.
 - Tests: JUnit 5 + Mockito with `@ExtendWith(MockitoExtension.class)`, AssertJ assertions, and
   `methodUnderTestScenarioExpectedBehavior` names.
 - Never leave production code that only tests exercise. Delete the code and its tests together.
@@ -121,6 +124,7 @@ rules/                   the rule files, single source of truth, with paths: fro
 skills/                  generated from rules/, one Claude Code skill per rule file
 commands/style-sync.md   Claude Code command that copies rules/ into a project's .claude/rules/
 CLAUDE-snippet.md        block to paste into a project's CLAUDE.md
+prompts/system-prompt.md condensed naming, Java, and frontend rules for a system prompt or .cursorrules
 build.py                 regenerates skills/ from rules/
 .claude-plugin/          plugin and marketplace manifests
 ```
@@ -129,7 +133,7 @@ build.py                 regenerates skills/ from rules/
 |---|---|---|
 | `rules/naming.md` | `naming-style` | Variable names match the class name, no abbreviations, `{Source}To{Target}` converter methods |
 | `rules/java-style.md` | `java-style` | No `var`, `final` everywhere, 140-character lines, record and accessor formatting, logger declaration, log-level discipline, magic strings, member ordering, blank-line and comment rules |
-| `rules/frontend-style.md` | `thymeleaf-style` | No hardcoded user-facing strings, parameterized i18n messages, the never-concatenate ladder, Bootstrap-first styling, semantic headings |
+| `rules/frontend-style.md` | `thymeleaf-style` | Template whitespace (indent, aligned attributes, blank lines between blocks), no hardcoded user-facing strings, parameterized i18n messages, the never-concatenate ladder, Bootstrap-first styling, semantic headings |
 | `rules/testing.md` | `testing-style` | JUnit 5 + Mockito scaffolding, AssertJ, test naming, fixtures |
 
 ## Use with Claude Code
@@ -186,6 +190,10 @@ An agent that reads this README finds the procedure in
 
 You can also copy the files in `rules/` into the rules directory of the project. The rule text
 starts after the `paths:` frontmatter. If your agent does not use the frontmatter, remove it.
+
+If your agent cannot read files or URLs at run time, paste
+[prompts/system-prompt.md](prompts/system-prompt.md) into its system prompt instead. It condenses the
+naming, Java, and frontend rules into one block. The test rules are not in it.
 
 ## Editing the rules
 

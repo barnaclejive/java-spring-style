@@ -1,6 +1,6 @@
 ---
 name: thymeleaf-style
-description: Thymeleaf, JavaScript, and SCSS conventions. No hardcoded user-facing strings and no fallback text: every string comes from messages.properties. Never concatenate with + in a template: use parameterized #{key(args)} messages, @{...} URL expressions, and |...| literal substitution. Bootstrap utilities over custom SCSS, semantic heading levels, and URLSearchParams in JavaScript. Use when editing Thymeleaf templates, static JavaScript, SCSS, or message bundles.
+description: Thymeleaf, JavaScript, and SCSS conventions. Template whitespace: 4-space indent, no indent under thead/tbody, continuation attributes aligned under the first attribute, blank lines only between sibling blocks. No hardcoded user-facing strings and no fallback text: every string comes from messages.properties. Never concatenate with + in a template: use parameterized #{key(args)} messages, @{...} URL expressions, and |...| literal substitution. Bootstrap utilities over custom SCSS, semantic heading levels, and URLSearchParams in JavaScript. Use when editing Thymeleaf templates, static JavaScript, SCSS, or message bundles.
 license: MIT
 ---
 
@@ -13,6 +13,7 @@ These rules are binding on every template, JavaScript, and SCSS edit. The naming
 ## JavaScript Conventions
 
 - **Prefer `const` over `let`. Never use `var`.** `const` is the JS equivalent of the Java `final`. Use `const` for all bindings. When the code genuinely reassigns a variable, use `let`. `var` is forbidden (function-scoped, hoisted, no reassignment protection).
+- **Blank lines in JavaScript follow the JavaScript layout, not the Java layout.** Indent with 4 spaces. Keep a function body tight: no blank line after its `{` and none before its `return`. Put one blank line between functions and between logical groups of statements.
 
 ## Template & SCSS Rules
 
@@ -20,6 +21,84 @@ These rules are binding on every template, JavaScript, and SCSS edit. The naming
 - **NEVER use `<h1>`–`<h6>` elements for visual sizing.** Heading elements exist only to express the content hierarchy of the page for screen readers, assistive tech, and document outline tools. Pick the heading level that matches the place of the element in the page: the page title is `<h1>`, section headings are `<h2>`, sub-section headings are `<h3>`, and so on, with no skipped levels. If you need text at a specific size, apply a Bootstrap font-size utility (`fs-1` … `fs-6`, or `display-1` … `display-6` for hero text) or an existing theme typography class. Never pick a smaller or larger heading tag only to get its default font size. Never override the font-size of a heading with an inline `style` or a one-off SCSS rule. If a piece of text is purely a label or a visual emphasis (not a section heading), use a `<div>`, `<span>`, or `<p>` with the applicable font-size utility, not an `<h*>` tag. Examples: a page title that must look visually compact is `<h1 class="fs-4">`, not `<h4>`. A card section title is `<h2 class="fs-5 mb-0">` (the next semantic level after the page `<h1>`), not `<h5>`. The "Buttons", "Forms", and "Cards" labels inside a design-system spec are `<h4>` because they sit inside an `<h3>` sub-section, not because they need a medium size.
 - **ALWAYS prefer Bootstrap utility classes (or existing global theme/style classes) over custom SCSS** — for spacing (`p-*`, `m-*`, `gap-*`), font size (`fs-1` … `fs-6`), font weight (`fw-bold`, `fw-normal`), text color (`text-muted`, `text-end`, plus your own theme colour utilities), background (`bg-*`), borders (`border`, `border-top`, `border-0`), display (`d-flex`, `d-none`), flex (`justify-content-*`, `align-items-*`), and similar concerns. The Bootstrap spacing and size utilities are token-driven (`$spacer`, `$h*-font-size`), so the values stay consistent. The utility classes your project already defines (in `_utilities.scss` or its equivalent) are also preferred over new SCSS. Write custom SCSS only when no Bootstrap class and no existing project class can express the rule — typically: project-specific colors, animations, hover-state suppression, scroll behavior, or selector-scoped overrides. If you write a one-off `.foo-lg { font-size: 1rem; padding: 0.55em 1em; }`, replace it with `class="fs-6 py-2 px-3"` on the element.
 - **NEVER build a string with `+` in a template.** The **Never Concatenate** section below gives the tool to use for each case.
+
+## Template Whitespace
+
+These rules are binding on every template edit. They describe the layout of every existing template, which is the layout that the IntelliJ IDEA default HTML style produces. A review finds whitespace broken more often than any other template rule.
+
+- **Indent with 4 spaces. Never use tabs.** Each nested element indents one level from its parent. The children of `<html>`, `<body>`, `<thead>`, `<tbody>`, and `<tfoot>` are the exception. They stay at the indent of the parent, so `<tr>` sits at the indent of `<tbody>`, and `<td>` indents one level from `<tr>`. `<th:block>` indents like any other element.
+- **One block element per line.** Keep an element with an empty body on one line: `<span th:text="#{key}"></span>`. Keep a short inline pair on one line: `<i class="fa-solid fa-plus me-1"></i><span th:text="#{key}"></span>`.
+- **Attribute order.** Put plain attributes before `th:` attributes, and `th:text` last. A structural `th:if`, `th:unless`, or `th:each` can come first.
+- **Continuation attributes align under the first attribute.** When a tag has many attributes, group related attributes on a line and break between the groups. Align every continuation line under the first attribute of the tag. Never use a fixed indent for continuation attributes.
+  ```html
+  <button type="button" class="btn btn-outline-primary btn-sm" id="exportSelectedBtn" disabled
+          data-bs-toggle="modal" data-bs-target="#exportConfirmModal">
+  ```
+- **No line limit, and no break inside an expression.** A long `th:href` or `th:with` value stays on one line. Two values break at their commas. A `th:with` with several assignments puts one assignment per line, aligned under the first one. A fragment call puts one parameter per line, indented 2 spaces past the tag, with the closing `)}"></div>` on the last parameter line.
+  ```html
+  <main id="main-content" class="container content-wrapper" role="main"
+        th:with="sortParam=${#strings.isEmpty(currentSort) ? null : currentSort},
+                 searchParam=${#strings.isEmpty(search) ? null : search}">
+      <div th:replace="~{fragments/page-header :: pageHeader(
+        title=${subscription.name},
+        backUrl=@{/admin/subscriptions},
+        backTextKey='regions.button.back')}"></div>
+  ```
+- **A blank line separates sibling blocks, and nothing else.** The blocks are page sections, form cards, `row` columns, the modals at the end of `<main>`, and the top-level children of `<body>`. Inside a block, keep the leaf lines tight. A label, its input, and its feedback have no blank line between them. Do not put a blank line after an opening tag or before a closing tag. `<body>` and `<main>` are the exception. Their top-level blocks can have a blank line on each side. Never put two blank lines in a row.
+- **A comment introduces each major block.** Put the comment on its own line at the indent of the block, in the form `<!-- Order count recap — each tile opens its card -->`. Put a blank line before the comment and none between the comment and its block.
+- **Inline scripts.** The code inside `<script th:inline="javascript">` starts at the indent of the `<script>` tag.
+
+The shape of a page body:
+
+```html
+<main id="main-content" class="container content-wrapper" role="main">
+    <div th:replace="~{fragments/flash-messages :: alerts}"></div>
+
+    <!-- Service regions — one row per region -->
+    <div class="card mb-4" id="serviceRegionCard"
+         th:data-search-base-url="@{/admin/regions(page=0, sort=${sortParam})}">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="fs-5 mb-0" th:text="#{regions.heading}"></h2>
+            <button type="button" class="btn btn-outline-primary btn-sm" id="addRegionBtn"
+                    data-bs-toggle="modal" data-bs-target="#addRegionModal">
+                <i class="fa-solid fa-plus me-1"></i><span th:text="#{regions.button.add}"></span>
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead>
+                    <tr>
+                        <th scope="col" th:text="#{regions.table.code}"></th>
+                        <th scope="col" th:text="#{regions.table.name}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="serviceRegion : ${serviceRegions}" th:id="|serviceRegion-row-${serviceRegion.id}|">
+                        <td th:text="${serviceRegion.code}"></td>
+                        <td th:text="${serviceRegion.name}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add region — confirmation modal -->
+    <div class="modal fade" id="addRegionModal" tabindex="-1"
+         aria-labelledby="addRegionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="addRegionModalLabel" th:text="#{regions.add.title}"></h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" th:aria-label="#{alert.close}"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+```
 
 ## No Hardcoded User-Facing Strings
 
@@ -100,7 +179,7 @@ Any run of letters that reaches the screen, the accessibility tree, or the brows
   2. **An external `static/js/*.js` file** — the file never passes through Thymeleaf, so the template must hand it the strings through `data-*` attributes on a root element. Read them with `dataset` in the module.
      ```html
      <div id="draft-root" th:data-msg-success="#{draft.update.success}"
-                          th:data-msg-error="#{draft.update.error}"></div>
+          th:data-msg-error="#{draft.update.error}"></div>
      ```
      ```javascript
      const messages = { success: root.dataset.msgSuccess, error: root.dataset.msgError };

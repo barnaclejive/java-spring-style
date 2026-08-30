@@ -27,6 +27,9 @@ The non-negotiables, in short:
   `messages.properties`.
 - Never build a string with `+`. Use `#{key(args)}` for text, `@{...}` for URLs, `|...|` for
   identifiers.
+- Whitespace: a blank line after every method `{`, a padded `try` / `catch`, the final `return` in
+  its own paragraph. Templates: 4-space indent, continuation attributes aligned under the first
+  attribute, blank lines only between sibling blocks.
 - Never leave production code that only tests exercise. Delete the code and its tests together.
 ```
 

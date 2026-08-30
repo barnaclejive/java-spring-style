@@ -36,7 +36,9 @@ SKILLS = {
     "thymeleaf-style": {
         "rules": "frontend-style.md",
         "description": (
-            "Thymeleaf, JavaScript, and SCSS conventions. No hardcoded user-facing strings and no "
+            "Thymeleaf, JavaScript, and SCSS conventions. Template whitespace: 4-space indent, no indent "
+            "under thead/tbody, continuation attributes aligned under the first attribute, blank lines "
+            "only between sibling blocks. No hardcoded user-facing strings and no "
             "fallback text: every string comes from messages.properties. Never concatenate with + "
             "in a template: use parameterized #{key(args)} messages, @{...} URL expressions, and "
             "|...| literal substitution. Bootstrap utilities over custom SCSS, semantic heading "
